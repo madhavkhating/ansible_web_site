@@ -1,0 +1,8 @@
+---
+- name: Apache Web Server
+  hosts: web
+  gather_facts: true
+  tasks:
+    - name: Ping Web Servers
+      ansible.builtin.ping:
+
