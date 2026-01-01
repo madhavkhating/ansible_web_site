@@ -1,8 +1,38 @@
 ---
-- name: Apache Web Server
+- name: Install HTTPD Web Server and Deploy Website
   hosts: web
+  become: yes
   gather_facts: true
+  vars:
+    ansible_user: ec2-user
+    ansible_ssh_private_key_file: ./privatekey.pem
+
   tasks:
     - name: Ping Web Servers
       ansible.builtin.ping:
+    - name: Install Apache Web Server package
+      ansible.builtin.yum:
+          name: httpd
+          state: present
+          update_cache: yes
+      notify:
+        - Start httpd service
+    
+    - name: Copy website files to the web server root directory
+      ansible.builtin.copy:
+        src: ./index.html
+        dest: /var/www/html/index.html
+        owner: apache
+        group: apache
+        mode: '0644'
+    
+  handlers:
+    - name: Start httpd service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: yes
+
+
+
 
