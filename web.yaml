@@ -20,12 +20,16 @@
     
     - name: Copy website files to the web server root directory
       ansible.builtin.copy:
-        src: ./index.html
-        dest: /var/www/html/index.html
+        src: "{{ item }}"
+        dest: "/var/www/html/"
         owner: apache
         group: apache
         mode: '0644'
-    
+      loop:
+        - ./index.html
+        - ./style.css
+        - ./lab-image.jpg
+          
   handlers:
     - name: Start httpd service
       ansible.builtin.service:
